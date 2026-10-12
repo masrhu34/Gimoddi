@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hypertrophy & Body Tracker</title>
+    <title>Smart Muscle & Routine Generator</title>
     <style>
         /* 기본 스타일 설정 */
         body {
@@ -17,12 +17,12 @@
         header {
             background-color: #1e293b;
             color: #ffffff;
-            padding: 2rem 1rem;
+            padding: 2.5rem 1rem;
             text-align: center;
         }
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 2.3rem;
         }
         header p {
             margin: 0.5rem 0 0 0;
@@ -33,12 +33,15 @@
             display: flex;
             justify-content: center;
             padding: 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         nav a {
             color: white;
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            margin: 0 0.5rem;
+            padding: 0.75rem 1.2rem;
+            margin: 0 0.3rem;
             font-weight: bold;
             border-radius: 4px;
             transition: background 0.3s;
@@ -47,7 +50,7 @@
             background-color: #475569;
         }
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
@@ -64,7 +67,6 @@
             padding-bottom: 0.5rem;
             margin-top: 0;
         }
-        /* 운동 가이드 스타일 */
         .guide-box {
             background-color: #f8fafc;
             border-left: 4px solid #3b82f6;
@@ -72,36 +74,76 @@
             margin-bottom: 1rem;
             border-radius: 0 4px 4px 0;
         }
-        /* 입력 폼 및 리스트 스타일 */
+        /* Form & Input Style */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
         .form-group {
             margin-bottom: 1rem;
+        }
+        .form-group.full-width {
+            grid-column: span 2;
         }
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: bold;
+            color: #475569;
         }
-        input[type="number"], input[type="date"] {
+        input[type="number"], input[type="date"], select {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.6rem;
             border: 1px solid #cbd5e1;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 1rem;
         }
         button {
-            background-color: #3b82f6;
+            background-color: #2563eb;
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             font-size: 1rem;
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
             font-weight: bold;
+            transition: background 0.2s;
         }
         button:hover {
-            background-color: #2563eb;
+            background-color: #1d4ed8;
         }
+        /* 추천 루틴 출력 카드 */
+        .routine-result {
+            margin-top: 1.5rem;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 1.5rem;
+            display: none;
+        }
+        .routine-result h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+        .routine-day {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 0.8rem;
+        }
+        .routine-day h4 {
+            margin: 0 0 0.5rem 0;
+            color: #0f172a;
+        }
+        .routine-day ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+        /* 기록 리스트 */
         .record-list {
             margin-top: 1.5rem;
             padding: 0;
@@ -109,12 +151,11 @@
         }
         .record-item {
             background: #f1f5f9;
-            padding: 0.75rem;
+            padding: 0.75rem 1rem;
             margin-bottom: 0.5rem;
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
         footer {
             text-align: center;
@@ -123,101 +164,208 @@
             color: white;
             margin-top: 4rem;
         }
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Smart Muscle & Body Tracker</h1>
-        <p>과학적인 근비대 원리와 체계적인 신체 변화 기록을 위한 공간</p>
+        <h1>Smart Muscle & Routine Generator</h1>
+        <p>과학적 근비대 가이드 & 맞춤형 운동 루틴 추천 프로그램</p>
     </header>
 
     <nav>
+        <a href="#generator">맞춤 루틴 추천</a>
         <a href="#science">근비대 과학</a>
-        <a href="#routine">추천 루틴</a>
-        <a href="#tracker">신체 변화 추적</a>
+        <a href="#tracker">체중 기록</a>
     </nav>
 
     <div class="container">
-        
-        <section id="science">
-            <h2>1. 근비대(Muscle Hypertrophy)의 과학적 원리</h2>
-            <p>근육이 성장하기 위해서는 단순한 노동이 아닌 과학적인 접근이 필요합니다. 웨이트 트레이닝을 통해 근섬유에 미세한 손상을 주면, 우리 몸은 이를 회복하는 과정에서 근육을 더 크게 만듭니다.</p>
+
+        <!-- 1. 맞춤형 루틴 추천 프로그램 섹션 -->
+        <section id="generator">
+            <h2>🎯 AI 맞춤형 운동 루틴 추천기</h2>
+            <p>본인의 운동 목적, 주당 가능한 운동 횟수, 경력을 입력하면 가장 최적화된 루틴을 생성합니다.</p>
             
-            <div class="guide-box">
-                <strong>기계적 장력 (Mechanical Tension)</strong>
-                <p>근육이 무거운 무게항복에 저항할 때 발생하는 물리적인 힘입니다. 근성장을 유발하는 가장 핵심적인 요인으로, 점진적 과부하를 통해 매주 중량이나 횟수를 늘려가야 합니다.</p>
-            </div>
+            <form id="routineForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="goal">운동 목적</label>
+                        <select id="goal" required>
+                            <option value="hypertrophy">근비대 (근육량 증대)</option>
+                            <option value="strength">근력 향상 (3대 운동 중량 증가)</option>
+                            <option value="fatloss">체지방 감량 및 체력 증진</option>
+                        </select>
+                    </div>
 
-            <div class="guide-box">
-                <strong>근손상과 위성세포 (Muscle Damage & Satellite Cells)</strong>
-                <p>운동을 통해 근섬유가 미세하게 손상되면, 근육 주변에 있는 위성세포가 활성화됩니다. 이 위성세포들이 손상된 근섬유와 융합하면서 근육 세포의 핵을 늘려주고, 결과적으로 근육의 부피가 커지게 됩니다.</p>
-            </div>
-        </section>
+                    <div class="form-group">
+                        <label for="days">주당 운동 가능 횟수</label>
+                        <select id="days" required>
+                            <option value="3">주 3회</option>
+                            <option value="4" selected>주 4회</option>
+                            <option value="5">주 5회</option>
+                        </select>
+                    </div>
 
-        <section id="routine">
-            <h2>2. 효율적인 분할 운동 루틴</h2>
-            <p>근육의 회복 속도와 운동 효율을 극대화하기 위해 설계된 대중적인 분할 방식입니다. 각자의 환경에 맞춰 선택하여 진행하는 것을 권장합니다.</p>
-            
-            <div class="guide-box">
-                <strong>상체 및 하체 2분할 (Upper / Lower Split)</strong>
-                <p>월요일과 목요일에는 상체 운동을 진행하고, 화요일과 금요일에는 하체 운동을 진행하여 주 4회 운동하는 방식입니다. 각 부위별로 주 2회씩 자극을 줄 수 있어 근비대에 매우 효과적입니다.</p>
-            </div>
-
-            <div class="guide-box">
-                <strong>밀기, 당기기, 다리 3분할 (Push / Pull / Legs Split)</strong>
-                <p>가슴과 어깨, 삼두를 사용하는 밀기 운동과, 등과 이두를 사용하는 당기기 운동, 그리고 하체 운동으로 나누어 주 3회에서 6회 수행하는 방식입니다. 특정 부위에 더 집중할 수 있다는 장점이 있습니다.</p>
-            </div>
-        </section>
-
-        <section id="tracker">
-            <h2>3. 나의 신체 변화 기록 현황</h2>
-            <p>근비대를 위해서는 꾸준한 체중 관리가 필수적입니다. 매일 아침 공복 상태의 몸무게를 기록하여 변화를 추적해 보세요.</p>
-            
-            <form id="weightForm">
-                <div class="form-group">
-                    <label for="dateInput">기록 날짜</label>
-                    <input type="date" id="dateInput" required>
+                    <div class="form-group full-width">
+                        <label for="experience">운동 경력</label>
+                        <select id="experience" required>
+                            <option value="beginner">초급자 (6개월 미만)</option>
+                            <option value="intermediate">중급자 (6개월 ~ 2년)</option>
+                            <option value="advanced">상급자 (2년 이상)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="weightInput">현재 체중 (kg)</label>
-                    <input type="number" id="weightInput" step="0.1" placeholder="예: 65.5" required>
-                </div>
-                <button type="submit">기록 추가하기</button>
+
+                <button type="button" onclick="generateRoutine()">맞춤 운동 루틴 생성하기</button>
             </form>
 
-            <ul id="recordList" class="record-list">
-                </ul>
+            <!-- 루틴 결과 출력 창 -->
+            <div id="routineResult" class="routine-result">
+                <h3 id="resultTitle">추천 루틴 결과</h3>
+                <p id="resultDesc"></p>
+                <div id="routineDaysContainer"></div>
+            </div>
+        </section>
+
+        <!-- 2. 근비대 과학 섹션 -->
+        <section id="science">
+            <h2>📚 근비대(Muscle Hypertrophy)의 핵심 원리</h2>
+            
+            <div class="guide-box">
+                <strong>1. 점진적 과부하 (Progressive Overload)</strong>
+                <p>근육은 일정한 자극에 적응합니다. 근성장을 지속하려면 매주/매월 운동 중량, 세트 수, 또는 반복 횟수를 조금씩 늘려야 합니다.</p>
+            </div>
+
+            <div class="guide-box">
+                <strong>2. 기계적 장력과 위성세포 (Mechanical Tension & Satellite Cells)</strong>
+                <p>고중량 운동 시 발생하는 기계적 장력이 근섬유에 자극을 주면, 줄기세포의 일종인 <b>위성세포(Satellite Cell)</b>가 활성화되어 손상된 근육 세포와 융합하고 근육 단백질 합성(MPS)을 촉진합니다.</p>
+            </div>
+        </section>
+
+        <!-- 3. 체중 추적 섹션 -->
+        <section id="tracker">
+            <h2>📈 신체 변화 기록</h2>
+            <p>매일 아침 공복 체중을 기록하여 몸의 변화를 관찰하세요.</p>
+            
+            <form id="weightForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dateInput">날짜</label>
+                        <input type="date" id="dateInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="weightInput">체중 (kg)</label>
+                        <input type="number" id="weightInput" step="0.1" placeholder="예: 68.5" required>
+                    </div>
+                </div>
+                <button type="submit">기록 추가</button>
+            </form>
+
+            <ul id="recordList" class="record-list"></ul>
         </section>
 
     </div>
 
     <footer>
-        <p>&copy; 2026 Smart Muscle Tracker. Built for GitHub Pages Achievement.</p>
+        <p>&copy; 2026 Smart Muscle & Routine Generator. GitHub Pages Project.</p>
     </footer>
 
     <script>
-        // 현재 날짜를 기본값으로 설정하는 기능
+        // 1. 운동 루틴 추천 프로그램 로직
+        function generateRoutine() {
+            const goal = document.getElementById('goal').value;
+            const days = document.getElementById('days').value;
+            const exp = document.getElementById('experience').value;
+
+            const resultDiv = document.getElementById('routineResult');
+            const title = document.getElementById('resultTitle');
+            const desc = document.getElementById('resultDesc');
+            const daysContainer = document.getElementById('routineDaysContainer');
+
+            daysContainer.innerHTML = ''; // 기존 결과 초기화
+
+            // 볼륨(세트/횟수) 설정
+            let setRep = "3~4세트 x 8~12회 (휴식 90초)";
+            if (goal === 'strength') setRep = "5세트 x 3~5회 (휴식 3분)";
+            if (goal === 'fatloss') setRep = "3세트 x 12~15회 (휴식 60초)";
+
+            // 초보자 팁 추가
+            let expTip = exp === 'beginner' ? " (초급자는 무리한 중량보다 정확한 자세와 자극에 집중하세요.)" : "";
+
+            title.innerText = `📋 추천 플랜: 주 ${days}회 ${goal === 'hypertrophy' ? '근비대' : goal === 'strength' ? '근력 향상' : '체지방 감량'} 루틴`;
+            desc.innerText = `권장 세트 및 횟수: ${setRep}${expTip}`;
+
+            let routineData = [];
+
+            // 조건별 루틴 생성
+            if (days === "3") {
+                routineData = [
+                    { day: "Day 1: 무산소 - 전신 A (가슴/등/하체)", exercises: ["바벨 스쿼트", "벤치 프레스", "렛풀다운", "오버헤드 프레스", "플랭크 1분"] },
+                    { day: "Day 2: 휴식 또는 가벼운 유산소", exercises: ["30분 산책 또는 스트레칭"] },
+                    { day: "Day 3: 무산소 - 전신 B (하체/어깨/팔)", exercises: ["데드리프트", "덤벨 숄더 프레스", "바벨 로우", "딥스", "복근 운동"] },
+                    { day: "Day 4: 휴식 또는 가벼운 유산소", exercises: ["30분 산책 또는 스트레칭"] },
+                    { day: "Day 5: 무산소 - 전신 C (가슴/등/하체)", exercises: ["레그 프레스", "인클라인 덤벨 프레스", "시티드 로우", "사이드 레터럴 레이즈"] }
+                ];
+            } else if (days === "4") {
+                routineData = [
+                    { day: "Day 1: 상체 (Upper A)", exercises: ["벤치 프레스", "바벨 로우", "오버헤드 프레스", "렛풀다운", "바벨 컬 & 삼두 익스텐션"] },
+                    { day: "Day 2: 하체 (Lower A)", exercises: ["바벨 스쿼트", "로마니안 데드리프트", "레그 익스텐션", "레그 컬", "카프 레이즈"] },
+                    { day: "Day 3: 휴식", exercises: ["충분한 수면 및 단백질 섭취"] },
+                    { day: "Day 4: 상체 (Upper B)", exercises: ["인클라인 덤벨 프레스", "시티드 케이블 로우", "덤벨 숄더 프레스", "풀업", "암 컬"] },
+                    { day: "Day 5: 하체 (Lower B)", exercises: ["레그 프레스", "스티프 레그 데드리프트", "워킹 런지", "복근 운동(행잉 레그레이즈)"] }
+                ];
+            } else if (days === "5") {
+                routineData = [
+                    { day: "Day 1: 가슴 & 삼두 (Push)", exercises: ["플랫 벤치 프레스", "인클라인 덤벨 프레스", "딥스", "케이블 푸쉬다운"] },
+                    { day: "Day 2: 등 & 이두 (Pull)", exercises: ["데드리프트", "바벨 로우", "렛풀다운", "바벨 컬"] },
+                    { day: "Day 3: 하체 (Legs)", exercises: ["바벨 스쿼트", "레그 프레스", "레그 컬", "런지"] },
+                    { day: "Day 4: 어깨 & 복근 (Shoulder)", exercises: ["오버헤드 프레스", "사이드 레터럴 레이즈", "페이스 풀", "행잉 레그레이즈"] },
+                    { day: "Day 5: 팔 & 약점 보완", exercises: ["바벨 컬", "라잉 트라이셉스 익스텐션", "사이드 레터럴 레이즈", "유산소 20분"] }
+                ];
+            }
+
+            // HTML 구조 생성
+            routineData.forEach(item => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'routine-day';
+                
+                let listHtml = `<h4>${item.day}</h4><ul>`;
+                item.exercises.forEach(ex => {
+                    listHtml += `<li>${ex}</li>`;
+                });
+                listHtml += `</ul>`;
+                
+                dayDiv.innerHTML = listHtml;
+                daysContainer.appendChild(dayDiv);
+            });
+
+            resultDiv.style.display = 'block';
+        }
+
+        // 2. 체중 기록 프로그램 로직
         document.getElementById('dateInput').value = new Date().toISOString().substring(0, 10);
 
-        // 폼 제출 이벤트 처리기
         document.getElementById('weightForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // 페이지 새로고침 방지
+            e.preventDefault();
 
-            // 입력값 가져오기
             const dateValue = document.getElementById('dateInput').value;
             const weightValue = document.getElementById('weightInput').value;
 
-            // 새로운 리스트 아이템 생성
             const li = document.createElement('li');
             li.className = 'record-item';
-            li.innerHTML = `<span><strong>날짜:</strong> ${dateValue}</span> <span><strong>체중:</strong> ${weightValue} kg</span>`;
+            li.innerHTML = `<span>📅 <strong>${dateValue}</strong></span> <span>⚖️ <strong>${weightValue} kg</strong></span>`;
 
-            // 리스트의 맨 위에 새로운 기록 추가
             const recordList = document.getElementById('recordList');
             recordList.insertBefore(li, recordList.firstChild);
 
-            // 체중 입력 칸 비우기
             document.getElementById('weightInput').value = '';
         });
     </script>
